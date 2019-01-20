@@ -7,6 +7,8 @@ from selenium.webdriver.common.keys import Keys
 import time
 import urllib2 #for scroll?
 from bs4 import BeautifulSoup
+from multiprocessing import Pool
+
 
 def scroll_page(driver):
     last_height = driver.execute_script("return document.body.scrollHeight")
@@ -32,6 +34,7 @@ def get_page_with_webdriver(page_url):
     driver.get(page_url)
     driver = scroll_page(driver)
     html = driver.page_source
+    driver.close()
     return html
 
 def get_page_with_request(page_url): #no scrolling but no lag for webdriver
@@ -41,7 +44,7 @@ def get_page_with_request(page_url): #no scrolling but no lag for webdriver
 
 def get_page(page_url):
     return get_page_with_webdriver(page_url)
-    return get_page_with_request(page_url)
+    #return get_page_with_request(page_url)
 
 def get_soup_page(page):
     soup = BeautifulSoup(get_page(page), 'html.parser')
@@ -92,7 +95,13 @@ def get_keyword_in_block(data,soup_block):
     return data
 
 def refactor_test_get_quotes_list(author):
-    soup = get_soup_page(url+'/authors/'+author)
+    
+    try:
+        soup = get_soup_page(url+'/authors/'+author)
+    except:
+        print 'something wrong '+author
+        return []
+
     quote_list=[]
     blocks_list = soup.find_all('div', class_='m-brick grid-item boxy bqQt')
 
@@ -126,16 +135,14 @@ def lista_autori_lettera(letter):
         tot_authors_number = tot_authors_number + authors_number
     return authors , tot_authors_number
 
-def quote_script(letter):
-    letters={letter:[]}
-    authors , tot_authors_number = lista_autori_lettera(letter)
-    print "Number of authors for letter "+letter+": "+str(tot_authors_number)
-    for author in authors:
-        author_object = { "author":{'url':author}, "quotes":refactor_test_get_quotes_list(author) }
-        letters[letter].append(author_object)
-        #print(json.dumps(letters, indent=2))
-        with open('/Users/damianobellucci/Desktop/Projects/scraping-quotes/scraping-quotes1.3.2/'+letter+'.json', 'w') as outfile:
-            json.dump(letters, outfile, sort_keys = True, indent = 4)
+
+
+def atomic_operation(author):
+    author_object = { "author":{'url':author}, "quotes":refactor_test_get_quotes_list(author) }
+    #print(json.dumps(letters, indent=2))
+    with open('/Users/damianobellucci/Desktop/Projects/scraping-quotes/scraping-quotes1.3.2/authors/'+author+'.json', 'w') as outfile:
+        json.dump(author_object, outfile, sort_keys = True, indent = 4)
+
 
 def test_quote_script(letter): #with test_get_quotes_list
     letters={letter:[]}

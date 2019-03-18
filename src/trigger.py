@@ -10,7 +10,7 @@ from multiprocessing import Pool
 #letters = ['g','h','i','j','k','l','m']
 #letters = ['n','o','p','q','r','s','t','u','v','w','x','y','z']
 
-letter = 'a'
+letter = 'x'
 count = 0
 
 authors , tot_authors_number = script.lista_autori_lettera(letter)

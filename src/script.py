@@ -118,7 +118,11 @@ def get_bio_in_block_info_author(soup_block_info_author):
         data[el['href'].split('/',2)[1]] = el.get_text()
         if el['href'].split('/',2)[1]=='birthdays':
             list_links = soup_block_info_author.find_all('a')
-            print list_links[-1].next_sibling[2:-2]
+            #print list_links[-1].next_sibling[2:-2]
+            data['birthdays'] = data['birthdays']+ ' ' + list_links[-1].next_sibling[2:-2]
+            
+            data_birthdays_splitted = data['birthdays'].split()
+            data['birthdays'] = {'day':data_birthdays_splitted[1],'month':data_birthdays_splitted[0],'year':data_birthdays_splitted[2]}
 
     return data
 
@@ -178,7 +182,7 @@ def lista_autori_lettera(letter):
 def atomic_operation(author):
     bio, quote_list = refactor_test_get_quotes_list(author)
     author_object = {"author": {'url': author,
-                                'name': bio}, "quotes": quote_list}
+                                'info': bio}, "quotes": quote_list}
     #print(json.dumps(letters, indent=2))
     with open('/Users/damianobellucci/Desktop/Projects/scraping-quotes/scraping-quotes1.3.2/authors/'+author+'.json', 'w') as outfile:
         json.dump(author_object, outfile, sort_keys=True, indent=4)

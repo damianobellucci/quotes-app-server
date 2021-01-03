@@ -13,22 +13,20 @@ from multiprocessing import Pool
 letter = 'x'
 count = 0
 
-authors , tot_authors_number = script.lista_autori_lettera(letter)
-print "Number of authors for letter "+letter+": "+str(tot_authors_number)
-
+authors, tot_authors_number = script.lista_autori_lettera(letter)
+print("Number of authors for letter "+letter+": "+str(tot_authors_number))
 if __name__ == '__main__':
-    while len(authors)>0:
-        authorsToProcess = authors[:20]  
+    """     while len(authors) > 0:
+            authorsToProcess = authors[:20]
 
-        p = Pool(len(authorsToProcess))
-        p.map(script.atomic_operation, authorsToProcess)
-        p.close()
-        #p.join()
+            p = Pool(len(authorsToProcess))
+            p.map(script.atomic_operation, authorsToProcess)
+            p.close()
+            # p.join()
 
+            authors = authors[20:]
 
-        authors = authors[20:]
-
-        count+=20
-        print count
-
-    
+            count += 20
+            print(count)
+    """
+    script.atomic_operation(authors[1])

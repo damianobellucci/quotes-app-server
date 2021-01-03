@@ -1,5 +1,6 @@
 
-import urllib2  # for scroll?
+import urllib.request as urllib
+
 from multiprocessing import Pool
 from bs4 import BeautifulSoup
 import time
@@ -33,7 +34,7 @@ def scroll_page(driver):
 
 def get_page_with_webdriver(page_url):
     driver = webdriver.Chrome(
-        '/Users/damianobellucci/Desktop/Projects/scraping-quotes/scraping-quotes1.3.2/chromedriver')
+        '../chromedriver')
     driver.get(page_url)
     driver = scroll_page(driver)
     html = driver.page_source
@@ -42,8 +43,8 @@ def get_page_with_webdriver(page_url):
 
 
 def get_page_with_request(page_url):  # no scrolling but no lag for webdriver
-    req = urllib2.Request(page_url, headers={'User-Agent': "Magic Browser"})
-    con = urllib2.urlopen(req)
+    req = urllib.Request(page_url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.urlopen(req)
     return con.read()
 
 
@@ -112,17 +113,20 @@ def get_keyword_in_block(data, soup_block):
 
 def get_bio_in_block_info_author(soup_block_info_author):
     data = {}
-    data['name'] = soup_block_info_author.find_all('h1', class_='quoteListH1')[0].get_text()[:-7]
+    data['name'] = soup_block_info_author.find_all(
+        'h1', class_='quoteListH1')[0].get_text()[:-7]
 
     for el in soup_block_info_author.find_all(href=True):
-        data[el['href'].split('/',2)[1]] = el.get_text()
-        if el['href'].split('/',2)[1]=='birthdays':
+        data[el['href'].split('/', 2)[1]] = el.get_text()
+        if el['href'].split('/', 2)[1] == 'birthdays':
             list_links = soup_block_info_author.find_all('a')
-            #print list_links[-1].next_sibling[2:-2]
-            data['birthdays'] = data['birthdays']+ ' ' + list_links[-1].next_sibling[2:-2]
-            
+            # print list_links[-1].next_sibling[2:-2]
+            data['birthdays'] = data['birthdays'] + \
+                ' ' + list_links[-1].next_sibling[2:-2]
+
             data_birthdays_splitted = data['birthdays'].split()
-            data['birthdays'] = {'day':data_birthdays_splitted[1],'month':data_birthdays_splitted[0],'year':data_birthdays_splitted[2]}
+            data['birthdays'] = {'day': data_birthdays_splitted[1],
+                                 'month': data_birthdays_splitted[0], 'year': data_birthdays_splitted[2]}
 
     return data
 
@@ -132,20 +136,22 @@ def refactor_test_get_quotes_list(author):
     try:
         soup = get_soup_page(url+'/authors/'+author)
     except:
-        print 'something wrong '+author
+        print('something wrong '+author)
         return []
 
     quote_list = []
-    blocks_list = soup.find_all('div', class_='m-brick grid-item boxy bqQt')
+    blocks_list = soup.find_all(
+        'div', class_='m-brick grid-item boxy bqQt r-width')
 
-    # gestione blocco info biografia autore
-    block_info_author = soup.find_all('div', class_='pull-left bio-under')
-    # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
-    block_info_author = str(block_info_author)
-    soup_block_info_author = BeautifulSoup(block_info_author, 'html.parser')
-    info_author = get_bio_in_block_info_author(soup_block_info_author)
-    #####
-
+    """     # gestione blocco info biografia autore
+        block_info_author = soup.find_all('div', class_='pull-left bio-under')
+        # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
+        block_info_author = str(block_info_author)
+        soup_block_info_author = BeautifulSoup(
+            block_info_author, 'html.parser')
+        info_author = get_bio_in_block_info_author(soup_block_info_author)
+        #####
+    """
     for block in blocks_list:
         # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
         block = str(block)
@@ -161,7 +167,7 @@ def refactor_test_get_quotes_list(author):
         #####
 
         quote_list.append(data)
-    return info_author, quote_list
+    return "info_author", quote_list
 
 
 def lista_autori_lettera(letter):
@@ -183,8 +189,8 @@ def atomic_operation(author):
     bio, quote_list = refactor_test_get_quotes_list(author)
     author_object = {"author": {'url': author,
                                 'info': bio}, "quotes": quote_list}
-    #print(json.dumps(letters, indent=2))
-    with open('/Users/damianobellucci/Desktop/Projects/scraping-quotes/scraping-quotes1.3.2/authors/'+author+'.json', 'w') as outfile:
+    # print(json.dumps(letters, indent=2))
+    with open('./authors/'+author+'.json', 'w') as outfile:
         json.dump(author_object, outfile, sort_keys=True, indent=4)
 
 
@@ -197,7 +203,7 @@ def test_quote_script(letter):  # with test_get_quotes_list
         author_object = {"author": {'url': author},
                          "quotes": refactor_test_get_quotes_list(author)}
         letters[letter].append(author_object)
-        #print(json.dumps(letters, indent=2))
+        # print(json.dumps(letters, indent=2))
         with open('/Users/damianobellucci/Desktop/Projects/scraping-quotes/scraping-quotes1.3.2/'+letter+'.json', 'w') as outfile:
             json.dump(letters, outfile, sort_keys=True, indent=4)
     # test_get_quotes_list(author)

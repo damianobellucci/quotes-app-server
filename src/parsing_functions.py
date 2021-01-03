@@ -1,4 +1,5 @@
 
+from urllib.error import URLError, HTTPError
 import urllib.request as urllib
 
 from multiprocessing import Pool
@@ -24,17 +25,11 @@ def get_info_author(block):
         if(len(element) != 0):
             info_string_2 += element + " "
 
-    print(info_string_2)
     return {'info_html': info_html, 'info_string': info_string_2}
 
 
 def refactor_test_get_quotes_list(author):
-
-    try:
-        soup = get_soup_page(url+'/authors/'+author)
-    except:
-        print('something wrong '+author)
-        return []
+    soup = get_soup_page(url+'/authors/'+author)
 
     quote_list = []
     blocks_list = soup.find_all(
@@ -104,8 +99,8 @@ def get_page_with_request(page_url):  # no scrolling but no lag for webdriver
 
 
 def get_page(page_url):
-    # return get_page_with_webdriver(page_url)
-    return get_page_with_request(page_url)
+    page = get_page_with_request(page_url)
+    return page
 
 
 def get_soup_page(page):
@@ -167,26 +162,6 @@ def get_keyword_in_block(data, soup_block):
     return data
 
 
-def get_bio_in_block_info_author(soup_block_info_author):
-    data = {}
-    data['name'] = soup_block_info_author.find_all(
-        'h1', class_='quoteListH1')[0].get_text()[:-7]
-
-    for el in soup_block_info_author.find_all(href=True):
-        data[el['href'].split('/', 2)[1]] = el.get_text()
-        if el['href'].split('/', 2)[1] == 'birthdays':
-            list_links = soup_block_info_author.find_all('a')
-            # print list_links[-1].next_sibling[2:-2]
-            data['birthdays'] = data['birthdays'] + \
-                ' ' + list_links[-1].next_sibling[2:-2]
-
-            data_birthdays_splitted = data['birthdays'].split()
-            data['birthdays'] = {'day': data_birthdays_splitted[1],
-                                 'month': data_birthdays_splitted[0], 'year': data_birthdays_splitted[2]}
-
-    return data
-
-
 def lista_autori_lettera(letter):
     authors = []
     max_index = max_index_page(url + letter)
@@ -207,7 +182,7 @@ def atomic_operation(author):
     author_object = {"author": {'name': name, 'url':  author,
                                 'info_html': info}, "quotes": quote_list}
     # print(json.dumps(letters, indent=2))
-    with open('./authors/'+author+'.json', 'w') as outfile:
+    with open('../authors/'+author+'.json', 'w') as outfile:
         json.dump(author_object, outfile, sort_keys=True, indent=4)
 
 

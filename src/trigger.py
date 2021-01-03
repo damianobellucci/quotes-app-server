@@ -29,4 +29,4 @@ if __name__ == '__main__':
             count += 20
             print(count)
     """
-    script.atomic_operation(authors[1])
+    script.atomic_operation(authors[0])

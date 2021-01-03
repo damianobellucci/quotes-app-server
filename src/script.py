@@ -11,6 +11,55 @@ import sys
 url = 'https://www.brainyquote.com/authors/'
 
 
+def refactor_test_get_quotes_list(author):
+
+    try:
+        soup = get_soup_page(url+'/authors/'+author)
+    except:
+        print('something wrong '+author)
+        return []
+
+    quote_list = []
+    blocks_list = soup.find_all(
+        'div', class_='m-brick grid-item boxy bqQt r-width')
+
+    """     # gestione blocco info biografia autore
+        block_info_author = soup.find_all('div', class_='pull-left bio-under')
+        # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
+        block_info_author = str(block_info_author)
+        soup_block_info_author = BeautifulSoup(
+            block_info_author, 'html.parser')
+        info_author = get_bio_in_block_info_author(soup_block_info_author)
+        #####
+    """
+
+    """data['name'] = soup_block_info_author.find_all(
+        'h1', class_='quoteListH1')[0].get_text()[:-7]
+    """
+
+    # bq-subnav-h1
+
+    name_author = " ".join(soup.find_all(
+        'h1', class_='bq-subnav-h1')[0].get_text().split()[:-1])
+
+    for block in blocks_list:
+        # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
+        block = str(block)
+        soup_block = BeautifulSoup(block, 'html.parser')
+        data = {}
+
+        # take quote, input: data = {} , soup_block . output: data = {'text: 'text of the quote'},'text':'...' appended to data
+        data = get_quote_in_block(data, soup_block)
+        #####
+
+        # take keywords of quotes input : data, soup_block . output: data = {'keywords':[]} 'keywords':[] appended to data
+        data = get_keyword_in_block(data, soup_block)
+        #####
+
+        quote_list.append(data)
+    return name_author, quote_list
+
+
 def scroll_page(driver):
     last_height = driver.execute_script("return document.body.scrollHeight")
 
@@ -25,6 +74,7 @@ def scroll_page(driver):
 
         # Calculate new scroll height and compare with last scroll height
         new_height = driver.execute_script("return document.body.scrollHeight")
+
         if new_height == last_height:
             break
         last_height = new_height
@@ -49,8 +99,8 @@ def get_page_with_request(page_url):  # no scrolling but no lag for webdriver
 
 
 def get_page(page_url):
-    return get_page_with_webdriver(page_url)
-    # return get_page_with_request(page_url)
+    # return get_page_with_webdriver(page_url)
+    return get_page_with_request(page_url)
 
 
 def get_soup_page(page):
@@ -105,7 +155,9 @@ def get_quote_in_block(data, soup_block):
 def get_keyword_in_block(data, soup_block):
     keywords = []
     # per ogni citazione prendo le keywords
-    for keyword in soup_block.find_all('a', class_='oncl_list_kc'):
+
+    for keyword in soup_block.find_all('a', class_='qkw-btn btn btn-xs oncl_klc'):
+        print(keyword.get_text())
         keywords.append(keyword.get_text())
     data['keywords'] = keywords
     return data
@@ -131,45 +183,6 @@ def get_bio_in_block_info_author(soup_block_info_author):
     return data
 
 
-def refactor_test_get_quotes_list(author):
-
-    try:
-        soup = get_soup_page(url+'/authors/'+author)
-    except:
-        print('something wrong '+author)
-        return []
-
-    quote_list = []
-    blocks_list = soup.find_all(
-        'div', class_='m-brick grid-item boxy bqQt r-width')
-
-    """     # gestione blocco info biografia autore
-        block_info_author = soup.find_all('div', class_='pull-left bio-under')
-        # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
-        block_info_author = str(block_info_author)
-        soup_block_info_author = BeautifulSoup(
-            block_info_author, 'html.parser')
-        info_author = get_bio_in_block_info_author(soup_block_info_author)
-        #####
-    """
-    for block in blocks_list:
-        # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
-        block = str(block)
-        soup_block = BeautifulSoup(block, 'html.parser')
-        data = {}
-
-        # take quote, input: data = {} , soup_block . output: data = {'text: 'text of the quote'},'text':'...' appended to data
-        data = get_quote_in_block(data, soup_block)
-        #####
-
-        # take keywords of quotes input : data, soup_block . output: data = {'keywords':[]} 'keywords':[] appended to data
-        data = get_keyword_in_block(data, soup_block)
-        #####
-
-        quote_list.append(data)
-    return "info_author", quote_list
-
-
 def lista_autori_lettera(letter):
     authors = []
     max_index = max_index_page(url + letter)
@@ -186,9 +199,9 @@ def lista_autori_lettera(letter):
 
 
 def atomic_operation(author):
-    bio, quote_list = refactor_test_get_quotes_list(author)
-    author_object = {"author": {'url': author,
-                                'info': bio}, "quotes": quote_list}
+    info, quote_list = refactor_test_get_quotes_list(author)
+    author_object = {"author": {'url': url + author,
+                                'info': info}, "quotes": quote_list}
     # print(json.dumps(letters, indent=2))
     with open('./authors/'+author+'.json', 'w') as outfile:
         json.dump(author_object, outfile, sort_keys=True, indent=4)

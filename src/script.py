@@ -11,6 +11,23 @@ import sys
 url = 'https://www.brainyquote.com/authors/'
 
 
+def get_info_author(block):
+    info_html = str(block.find_all(
+        'div', class_='subnav-below-p')[0])
+
+    info_string = (block.find_all(
+        'div', class_='subnav-below-p')[0]).get_text().split('\n')
+
+    info_string_2 = ""
+
+    for element in info_string:
+        if(len(element) != 0):
+            info_string_2 += element + " "
+
+    print(info_string_2)
+    return {'info_html': info_html, 'info_string': info_string_2}
+
+
 def refactor_test_get_quotes_list(author):
 
     try:
@@ -23,19 +40,7 @@ def refactor_test_get_quotes_list(author):
     blocks_list = soup.find_all(
         'div', class_='m-brick grid-item boxy bqQt r-width')
 
-    """     # gestione blocco info biografia autore
-        block_info_author = soup.find_all('div', class_='pull-left bio-under')
-        # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
-        block_info_author = str(block_info_author)
-        soup_block_info_author = BeautifulSoup(
-            block_info_author, 'html.parser')
-        info_author = get_bio_in_block_info_author(soup_block_info_author)
-        #####
-    """
-
-    """data['name'] = soup_block_info_author.find_all(
-        'h1', class_='quoteListH1')[0].get_text()[:-7]
-    """
+    info_author = get_info_author(soup)
 
     # bq-subnav-h1
 
@@ -57,7 +62,7 @@ def refactor_test_get_quotes_list(author):
         #####
 
         quote_list.append(data)
-    return name_author, quote_list
+    return name_author, info_author, quote_list
 
 
 def scroll_page(driver):
@@ -157,7 +162,6 @@ def get_keyword_in_block(data, soup_block):
     # per ogni citazione prendo le keywords
 
     for keyword in soup_block.find_all('a', class_='qkw-btn btn btn-xs oncl_klc'):
-        print(keyword.get_text())
         keywords.append(keyword.get_text())
     data['keywords'] = keywords
     return data
@@ -199,9 +203,9 @@ def lista_autori_lettera(letter):
 
 
 def atomic_operation(author):
-    info, quote_list = refactor_test_get_quotes_list(author)
-    author_object = {"author": {'url': url + author,
-                                'info': info}, "quotes": quote_list}
+    name, info, quote_list = refactor_test_get_quotes_list(author)
+    author_object = {"author": {'name': name, 'url':  author,
+                                'info_html': info}, "quotes": quote_list}
     # print(json.dumps(letters, indent=2))
     with open('./authors/'+author+'.json', 'w') as outfile:
         json.dump(author_object, outfile, sort_keys=True, indent=4)

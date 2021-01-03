@@ -1,7 +1,11 @@
 {
     "author": {
-        "info": "X. J. Kennedy",
-        "url": "https://www.brainyquote.com/authors/x-j-kennedy-quotes"
+        "info_html": {
+            "info_html": "<div class=\"subnav-below-p\">\n<a href=\"/nationality/quotes-by-american-authors\">American</a>\n-\n<a href=\"/profession/quotes-by-authors\">Author</a>\n<span class=\"sepLine\"></span>\nBorn: <a href=\"/birthdays/august_21\">August 21</a>, 1929\n</div>",
+            "info_string": "American - Author Born: August 21, 1929 "
+        },
+        "name": "X. J. Kennedy",
+        "url": "x-j-kennedy-quotes"
     },
     "quotes": [
         {

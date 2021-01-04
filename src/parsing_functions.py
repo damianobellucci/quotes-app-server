@@ -174,7 +174,13 @@ def lista_autori_lettera(letter):
         i = i + 1
         tot_pages = tot_pages + 1
         tot_authors_number = tot_authors_number + authors_number
-    return authors, tot_authors_number
+    return authors
+
+
+def dump_authors_letter_list(letter):
+    with open('../results/authors-per-letter/'+letter+'.json', 'w') as outfile:
+        json.dump(
+            {"list": lista_autori_lettera(letter)}, outfile, sort_keys=True, indent=4)
 
 
 def atomic_operation(author):
@@ -182,7 +188,7 @@ def atomic_operation(author):
     author_object = {"author": {'name': name, 'url':  author,
                                 'info_html': info}, "quotes": quote_list}
     # print(json.dumps(letters, indent=2))
-    with open('../authors/'+author+'.json', 'w') as outfile:
+    with open('../results/final-result/'+author+'.json', 'w') as outfile:
         json.dump(author_object, outfile, sort_keys=True, indent=4)
 
 

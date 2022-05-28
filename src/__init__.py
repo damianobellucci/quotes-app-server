@@ -12,5 +12,5 @@ if __name__ == '__main__':
     for letter in letters:
         authors = parsing_functions.lista_autori_lettera(letter)
         parsing_functions.dump_authors_letter_list(letter)
-        # linear_execution(authors)
-        concurrent_execution(authors)
+        linear_execution(authors)
+        #concurrent_execution(authors)

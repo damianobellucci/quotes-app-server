@@ -49,19 +49,14 @@ def refactor_test_get_quotes_list(author):
     for block in blocks_list:
         # because block is a BeautifulSoup object, we must stringify it for "re"-soup it
         
-        
         block = str(block)
 
         soup_block = BeautifulSoup(block, 'html.parser')
         data = {}
 
-
-
         # take quote, input: data = {} , soup_block . output: data = {'text: 'text of the quote'},'text':'...' appended to data
         data = get_quote_in_block(data, soup_block)
         #####
-
-        print(data)
 
         # take keywords of quotes input : data, soup_block . output: data = {'keywords':[]} 'keywords':[] appended to data
         data = get_keyword_in_block(data, soup_block)

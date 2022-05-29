@@ -1,7 +1,9 @@
 from flask import Flask,request
+from flask_cors import CORS
 import sqlite3
 
 app = Flask(__name__)
+CORS(app)
 
 #sqlite connector
 def get_db_connection():
@@ -10,7 +12,7 @@ def get_db_connection():
     return conn
 
 # get a number of quotes specified bu the request arg "number"
-# example: http://127.0.0.1:5000/?number=3 returns three random quotes
+# example: http://127.0.0.1:5000/random_quote?number=3 returns a JSON object with a list of three random quotes
 
 @app.route("/random_quote", methods=['GET'])
 def random_quote():

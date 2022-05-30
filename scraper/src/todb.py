@@ -8,6 +8,8 @@ import sqlite3
 con = sqlite3.connect('quotes_app.db')
 cur = con.cursor()
 
+
+
 counter = 0
 for file in files:
     #loop over files, each one contains all possible from an author

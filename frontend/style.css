@@ -5,6 +5,8 @@ body {
 .card {
     padding: 10px;
     border: 1px solid white;
+
+    width: 70%;
     
 }
 
@@ -15,28 +17,39 @@ body {
 }
 
 .author-info {
-
     font-size: 15px;
     text-align: right;
     border: 1px solid  green;
     word-wrap: break-word;
 }
 
-.button-shuffle {
+.button-shuffle-top {
     color: white;
     padding: 10px;
     border: 5px solid green;
     text-align: center;
     background-color: rgb(70, 152, 70);
     border-radius: 10px;
+    margin-left: 50px;
+    
+}
 
+.button-shuffle-bottom {
+    color: white;
+    padding: 10px;
+    border: 5px solid green;
+    text-align: center;
+    background-color: rgb(70, 152, 70);
+    border-radius: 10px;
+    margin-left: 50px;
+    margin-top: 30px;
 }
 
 .container-button{
     border: 1px solid blue;
-    display: flex;
-    justify-content: center;
 }
+
+
 
 .main-container{
     width: 50%;
@@ -45,6 +58,9 @@ body {
     margin-right: auto;
     margin-left: auto;
     margin-top: 10%;
+
+    display: flex;
+
 
 }
 

@@ -2,6 +2,7 @@
 
 <head>
 <link rel="stylesheet" href="style.css"></link>
+<script src="scripts.js"></script>
 </head>
 
 <body>
@@ -13,17 +14,17 @@
         <div class="card">
 
             <!-- Text quote is only about the text of the quote -->
-            <div class="text-quote">ciaodasadsadsdsciaodasadsadsdsciaodasadsciaodasadsadsdsciaodasadsadsdsciaodasadsadsdsciaodasadsciaodasadsadsds</div>
+            <div id="text-quote" class="text-quote"></div>
 
             <!-- Info author is about the author of the info  -->
-            <div class="author-info">- Einstein Albert</div>
+            <div id="author-info" class="author-info"></div>
 
         </div>
 
 
         <div class="container-button">
             <!-- Button to pick a random quote -->
-            <button class="button-shuffle">
+            <button class="button-shuffle" onclick= GetQuote() >
             Pick one
             </button>
         </div>
@@ -32,3 +33,8 @@
 
 
 </body>
+
+<script>
+  /*Perfom get quote before loading page*/
+  GetQuote()
+</script>

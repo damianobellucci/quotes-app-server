@@ -1,0 +1,45 @@
+
+.card-login {
+
+    width: 50%;
+    border: 1px solid red;
+    margin: auto;
+
+
+}
+
+.container-form {
+    border: 1px solid  green;
+    margin:10px;
+    text-align: center;
+
+}
+
+.container-button {
+    border: 1px solid  green;
+    text-align: center;
+    margin:10px;
+}
+
+.container-register {
+    border: 1px solid  green;
+    margin:10px;
+    text-align: center;
+}
+
+.container-smarr {
+    border: 1px solid  green;
+    margin:10px;
+    text-align: center;
+}
+
+.container-links {
+    border: 1px solid  orange;
+    margin:10px;
+    text-align: center;
+}
+
+label{
+    display: flex;
+    flex-direction: column;
+  }

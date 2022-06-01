@@ -37,3 +37,8 @@ def random_quote():
     res = { 'quotes' : quotes }
 
     return res, 200
+
+@app.route("/login", methods=['POST'])
+def login():
+    #return token if access is valid
+    return request.json, 200

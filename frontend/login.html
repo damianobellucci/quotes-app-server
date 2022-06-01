@@ -51,8 +51,23 @@
             username = document.getElementById("username").value
             password = document.getElementById("password").value
 
-            alert('ciao')
-            //post method 
+
+            const data = { 'username': username, 'password':password };
+
+            fetch('http://127.0.0.1:5000/login', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.replace("index.html");
+            })
+            .catch((error) => {
+            console.error('Error:', error);
+            });
         }
     </script>
 

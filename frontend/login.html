@@ -11,28 +11,33 @@
 
         <div class="card-login">
             <div class="container-form">
+
                 <form>
                     <div class="container-input">
-                        <label>Username</label>
-                        <input type="text"></input>
-                        <label>Password</label>
-                        <input type="text"></input>
+                        <label for="username">Username</label>
+                        <input type="text" id="username" ></input>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" ></input>
+                    </div>
+                    <div class="container-button">
+                        <input type="submit" value="Submit" onclick=send() ></input>
+                    </div>
                     </div>
                 </form>
-            </div>
-            <div class="container-button">
-                Login
+
+
+                <div class="container-links">
+                    <div class="container-register">
+                        <a>Registrazione</a>
+                    </div>
+        
+                    <div class="container-smarr">
+                        <a>Password smarrita?</a>
+                    </div>
+                </div>
             </div>
 
-            <div class="container-links">
-                <div class="container-register">
-                    <a>Registrazione</a>
-                </div>
-    
-                <div class="container-smarr">
-                    <a>Password smarrita?</a>
-                </div>
-            </div>
+
 
 
         </div>
@@ -40,6 +45,16 @@
     </body>
 
 
+
+    <script>
+        function send(){
+            username = document.getElementById("username").value
+            password = document.getElementById("password").value
+
+            alert('ciao')
+            //post method 
+        }
+    </script>
 
 
 </html>

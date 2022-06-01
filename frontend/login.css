@@ -1,18 +1,16 @@
 
 .card-login {
 
-    width: 50%;
+    width: 250px;
     border: 1px solid red;
     margin: auto;
-
-
+    margin-top: 15%;
 }
 
 .container-form {
     border: 1px solid  green;
     margin:10px;
     text-align: center;
-
 }
 
 .container-button {
@@ -24,19 +22,20 @@
 .container-register {
     border: 1px solid  green;
     margin:10px;
-    text-align: center;
+
 }
 
 .container-smarr {
     border: 1px solid  green;
     margin:10px;
-    text-align: center;
+
 }
 
 .container-links {
     border: 1px solid  orange;
     margin:10px;
     text-align: center;
+
 }
 
 label{

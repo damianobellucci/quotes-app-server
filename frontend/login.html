@@ -61,13 +61,15 @@
             },
             body: JSON.stringify(data),
             })
-            .then(response => response.json())
-            .then(data => {
-                window.location.replace("index.html");
+            .then(response => {
+                if (response.ok){
+                    window.location.replace('index.html')
+                }
+                else throw 'error'
+                
             })
-            .catch((error) => {
-            console.error('Error:', error);
-            });
+            .catch(error=>{alert(error)})
+
         }
     </script>
 

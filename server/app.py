@@ -1,6 +1,7 @@
 from flask import Flask,request
 from flask_cors import CORS
 import sqlite3
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -40,5 +41,42 @@ def random_quote():
 
 @app.route("/login", methods=['POST'])
 def login():
-    #return token if access is valid
-    return request.json, 200
+    
+    conn = get_db_connection()
+
+    username = request.json['username']
+    password = request.json['password']
+
+    query = 'SELECT * FROM accounts WHERE username=? AND password=?'
+
+    cursor = conn.execute(query,(username,password)).fetchall()
+    conn.close()
+
+  
+    for account in cursor:
+        print(account['username'],account['password'])
+
+    if len(cursor) == 0:
+        return {'error':'login error'}, 400
+
+    else:
+        return {'success':'login success'}, 200
+
+
+@app.route("/register", methods=['POST'])
+def register():
+
+    username = request.json['username']
+    password = request.json['password']
+    
+    try:
+        conn = get_db_connection()
+        query = 'insert into accounts values(?,?)'
+        cursor = conn.execute(query,(username,password)).fetchall()
+        conn.commit()
+    except:
+        return {'error':'register failure'}, 400
+    
+    conn.close()
+    return {'success':'register success'}, 200
+    

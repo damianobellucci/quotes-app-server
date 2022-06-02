@@ -20,7 +20,7 @@
                         <input type="password" id="password" ></input>
                     </div>
                     <div class="container-button">
-                        <input type="submit" value="Submit" onclick=send() ></input>
+                        <input type="submit" value="Submit" id = "btn-submit" ></input>
                     </div>
                     </div>
                 </form>
@@ -47,10 +47,16 @@
 
 
     <script>
-        function send(){
+
+        document.getElementById("btn-submit").addEventListener("click", send);
+
+
+        function send(e){
+
+            e.preventDefault()
+
             username = document.getElementById("username").value
             password = document.getElementById("password").value
-
 
             const data = { 'username': username, 'password':password };
 
@@ -61,17 +67,25 @@
             },
             body: JSON.stringify(data),
             })
-            .then(response => {
+            .then(response=>{
                 if (response.ok){
-                    window.location.replace('index.html')
+                    response
+                    .json()
+                    .then((data)=>{
+                        console.log(data)
+                        /*window.location.href = 'index.html'*/
+                        /*document.cookie = data.token*/
+                    
+                    })
                 }
-                else throw 'error'
+                /*server answers error for some reason*/
+                else throw Error(response.status)
                 
             })
-            .catch(error=>{alert(error)})
-
+            /*error request*/
+            .catch(e=>{console.log(e)})
+            
         }
+        
     </script>
-
-
 </html>

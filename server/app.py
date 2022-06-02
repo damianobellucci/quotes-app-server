@@ -1,7 +1,7 @@
 from flask import Flask,request
 from flask_cors import CORS
 import sqlite3
-import json
+from uuid import uuid4
 
 app = Flask(__name__)
 CORS(app)
@@ -58,9 +58,20 @@ def login():
 
     if len(cursor) == 0:
         return {'error':'login error'}, 400
-
+    
     else:
-        return {'success':'login success'}, 200
+        token = uuid4().hex
+        try:
+            conn = get_db_connection()
+            query = 'insert into tokens values(?,?)'
+            cursor = conn.execute(query,(token,username)).fetchall()
+            conn.commit()
+            conn.close()
+        except Exception as exeption:
+            print(exeption)
+            return {'error':'register failure'}, 400
+  
+        return {'token':token}, 200
 
 
 @app.route("/register", methods=['POST'])
@@ -79,4 +90,24 @@ def register():
     
     conn.close()
     return {'success':'register success'}, 200
+
+
+@app.route("/info-account", methods=['GET'])
+def info_account():
+
+    token = request.json['token']
+    
+    try:
+        conn = get_db_connection()
+        query = 'SELECT * FROM tokens WHERE token=? LIMIT 1'
+        result = conn.execute(query,(token,)).fetchall()
+        for info in result:
+            print(info['token'],info['username'])
+        conn.close()
+        #...other queries to retrieve other infos
+        data = {'username':info['username']}
+        return data, 200
+
+    except:
+        return {'error':'error in getting info account by token'}, 400
     

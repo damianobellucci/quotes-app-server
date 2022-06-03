@@ -73,9 +73,8 @@
                     .json()
                     .then((data)=>{
                         console.log(data)
-                        /*window.location.href = 'index.html'*/
-                        /*document.cookie = data.token*/
-                    
+                        window.location.href = 'index.html'
+                        document.cookie="token="+data.token
                     })
                 }
                 /*server answers error for some reason*/

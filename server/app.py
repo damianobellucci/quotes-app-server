@@ -41,7 +41,8 @@ def random_quote():
 
 @app.route("/login", methods=['POST'])
 def login():
-    
+
+  
     conn = get_db_connection()
 
     username = request.json['username']
@@ -59,19 +60,19 @@ def login():
     if len(cursor) == 0:
         return {'error':'login error'}, 400
     
-    else:
-        token = uuid4().hex
-        try:
-            conn = get_db_connection()
-            query = 'insert into tokens values(?,?)'
-            cursor = conn.execute(query,(token,username)).fetchall()
-            conn.commit()
-            conn.close()
-        except Exception as exeption:
-            print(exeption)
-            return {'error':'register failure'}, 400
+
+    token = uuid4().hex
+    try:
+        conn = get_db_connection()
+        query = 'insert into tokens values(?,?)'
+        cursor = conn.execute(query,(token,username)).fetchall()
+        conn.commit()
+        conn.close()
+    except Exception as exeption:
+        print(exeption)
+        return {'error':'register failure'}, 400
   
-        return {'token':token}, 200
+    return {'token':token}, 200
 
 
 @app.route("/register", methods=['POST'])

@@ -6,6 +6,8 @@
 </head>
 
 <body>
+    <button id="login-btn">Login</button>
+    <div id="token"></div>
     
     <!-- Main container container contains quote card and pick one button -->
     <div class="main-container">
@@ -44,7 +46,34 @@
 
 </body>
 
-<script>
+<script >
+
+  document.getElementById("login-btn").addEventListener("click", ()=>window.location.href="login.html");
+
+
   /*Perfom get quote before loading page*/
   GetQuote()
+
+
+
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+    }
+
+  if(document.cookie.indexOf("token")>-1){
+    document.getElementById("token").innerHTML=getCookie("token")
+  }
+
 </script>

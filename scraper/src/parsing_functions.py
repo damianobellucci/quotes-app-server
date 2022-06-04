@@ -1,4 +1,5 @@
 
+from operator import index
 from urllib.error import URLError, HTTPError
 import urllib.request as urllib
 
@@ -27,9 +28,37 @@ def get_info_author(block):
 
     return {'info_html': info_html, 'info_string': info_string_2}
 
+#QUI
 
-def refactor_test_get_quotes_list(author):
-    soup = get_soup_page(url+'/authors/'+author)
+def get_author_in_block(data, soup_block):
+    #data['author'] = soup_block.find_all('a', class_='bq-aut')[0].get_text()
+    data['author'] = soup_block.find_all('a', {'title' : 'view author'})[0].get_text()
+    print(data['author'])
+    return data
+
+def get_indexes_pages(topic):
+    print(topic)
+    url = 'https://www.brainyquote.com/topics/'+topic+'-quotes'
+    soup = get_soup_page(url)
+
+    indexes = soup.find_all(
+        'ul', class_='pagination')
+
+    #check if there are more than one page
+    if len(indexes)>0:
+        indexes = soup.find_all('a', class_='page-link')
+        last = indexes[len(indexes)-2].get_text()
+        return int(last)
+      
+        
+
+
+
+def refactor_test_get_quotes_list(keyword,index):
+    url = 'https://www.brainyquote.com/topics/'+keyword+'-quotes'+"_"+str(index)
+    soup = get_soup_page(url)
+    
+    #soup = get_soup_page(url+'/authors/'+author)
 
     quote_list = []
     blocks_list = soup.find_all(
@@ -39,7 +68,7 @@ def refactor_test_get_quotes_list(author):
     #####
 
 
-    info_author = get_info_author(soup)
+    info_author = 'get_info_author(soup)'
 
     # bq-subnav-h1
 
@@ -59,9 +88,14 @@ def refactor_test_get_quotes_list(author):
         #####
 
         # take keywords of quotes input : data, soup_block . output: data = {'keywords':[]} 'keywords':[] appended to data
-        data = get_keyword_in_block(data, soup_block)
+        #data = get_keyword_in_block(data, soup_block)
         #####
 
+        data['keyword'] = keyword
+
+        data = get_author_in_block(data, soup_block)
+
+        print(data)
         quote_list.append(data)
     return name_author, info_author, quote_list
 
@@ -189,12 +223,11 @@ def dump_authors_letter_list(letter):
             {"list": lista_autori_lettera(letter)}, outfile, sort_keys=True, indent=4)
 
 
-def atomic_operation(author):
-    name, info, quote_list = refactor_test_get_quotes_list(author)
-    author_object = {"author": {'name': name, 'url':  author,
-                                'info_html': info}, "quotes": quote_list}
+def atomic_operation(keyword,index):
+    name, info, quote_list = refactor_test_get_quotes_list(keyword,index)
+    author_object = {"quotes": quote_list}
     # print(json.dumps(letters, indent=2))
-    with open('../results/final-result/'+author+'.json', 'w') as outfile:
+    with open('../results/topics/'+keyword+"_"+str(index)+'.json', 'w') as outfile:
         json.dump(author_object, outfile, sort_keys=True, indent=4)
 
 

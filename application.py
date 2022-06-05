@@ -1,8 +1,10 @@
+from email.mime import application
 from flask import Flask
 
-app = Flask(__name__)
+application = Flask(__name__)
 
 
-@app.route("/", methods=['GET'])
+@application.route("/")
 def ping():
     return 'ok'
+

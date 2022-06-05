@@ -15,6 +15,10 @@ def get_db_connection():
 # get a number of quotes specified bu the request arg "number"
 # example: http://127.0.0.1:5000/random_quote?number=3 returns a JSON object with a list of three random quotes
 
+@app.route("/ping", methods=['GET'])
+def ping():
+    return 'ok',200
+
 @app.route("/random_quote", methods=['GET'])
 def random_quote():
     conn = get_db_connection()
@@ -26,14 +30,15 @@ def random_quote():
         res['error'] = 'number parameter must be an integer between 1 and 10'
         return res, 400
 
-    query = 'SELECT * FROM quotes ORDER BY RANDOM() LIMIT ' + number
+    query = 'SELECT * FROM quotes_topics ORDER BY RANDOM() LIMIT ' + number
     cursor = conn.execute(query).fetchall()
     conn.close()
 
     quotes = []
 
     for quote in cursor:
-        quotes.append({ 'quote' :quote['text'],'author':quote['name_author'],'info':quote['info_author']})
+        print(quote)
+        quotes.append({ 'quote' :quote['text'],'author':quote['name_author'],'topic':quote['topic']})
 
     res = { 'quotes' : quotes }
 
@@ -111,4 +116,9 @@ def info_account():
 
     except:
         return {'error':'error in getting info account by token'}, 400
-    
+
+if __name__ == "__main__":
+    # Setting debug to True enables debug output. This line should be
+    # removed before deploying a production app.
+    #app.debug = True
+    app.run()

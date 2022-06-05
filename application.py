@@ -6,5 +6,5 @@ application = Flask(__name__)
 
 @application.route("/")
 def ping():
-    return 'ok'
+    return 'okkk'
 

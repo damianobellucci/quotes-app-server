@@ -3,12 +3,13 @@ from flask_cors import CORS
 import sqlite3
 from uuid import uuid4
 
+
 application = Flask(__name__)
 CORS(application)
 
 #sqlite connector
 def get_db_connection():
-    conn = sqlite3.connect('quotes_app.db')
+    conn = sqlite3.connect('s3://db-quotes/quotes_app.db')
     conn.row_factory = sqlite3.Row
     return conn
 

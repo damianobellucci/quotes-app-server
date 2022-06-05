@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=['GET'])
 def ping():
-    return 'ok'
+    return 'ok',200
 
 if __name__ == "__main__":
     app.run()

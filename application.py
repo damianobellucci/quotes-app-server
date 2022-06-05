@@ -9,7 +9,7 @@ CORS(application)
 
 #sqlite connector
 def get_db_connection():
-    conn = sqlite3.connect('s3://db-quotes/quotes_app.db')
+    conn = sqlite3.connect('quotes_app.db')
     conn.row_factory = sqlite3.Row
     return conn
 
